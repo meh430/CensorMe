@@ -7,18 +7,17 @@ chrome.runtime.onInstalled.addListener(() => {
             },
         ]);
     });
+
+    chrome.storage.sync.set({ bWords: [] }, () => {
+        console.log("Set up storage");
+    })
 });
 
-chrome.tabs.onActivated.addListener((activeInfo) => {
+
+//launch filter from here?
+chrome.tabs.onActivated.addListener(activeInfo => {
     chrome.tabs.get(activeInfo.tabId, (tab) => {
         console.log("url: " + tab.url);
         let currUrl = tab.url;
-        chrome.runtime.sendMessage({ tabUrl: currUrl });
-        let views = chrome.extension.getViews({
-            type: "popup",
-        });
-        for (let i = 0; i < views.length; i++) {
-            views[i].document.getElementById("currentSite").innerHTML = "Current Site: " + currUrl;
-        }
     });
 });

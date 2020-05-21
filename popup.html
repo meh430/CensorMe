@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            #currentSite {
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body>
         <h1>Censor Me!</h1>
         <h5 id="currentSite">Current Site: </h2>
             
         <input type="text" placeholder="Add Word..." id="wordInput">
-        <script src="popup.js"></script>
-        <ul>
+        <ul id="listContainer">
             <li>first</li>
             <li>second</li>
             <li>third</li>
             <li>fourth</li>
         </ul>
+        <script src="popup.js"></script>
     </body>
 </html>

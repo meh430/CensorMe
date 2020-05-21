@@ -4,8 +4,7 @@
     "description": "Censor the internet by blocking certain words!",
     "manifest_version": 2,
     "permissions": ["declarativeContent", "activeTab", "tabs", "http://*/*",
-        "https://*/*"
-    ],
+        "https://*/*", "storage"],
     "background": {
         "scripts": ["startup.js"],
         "persistent": true
