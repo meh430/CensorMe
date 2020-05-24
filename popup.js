@@ -47,6 +47,7 @@ function updateUL() {
     console.log(blockedWords)
     blockedWords.forEach(word => {
         item = document.createElement("li");
+        item.className = "itemStyle";
         item.appendChild(document.createTextNode(word));
         listCont.appendChild(item);
     });
