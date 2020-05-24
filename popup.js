@@ -2,6 +2,7 @@ let wordInput = document.getElementById("wordInput");
 let currentSite = document.getElementById("currentSite");
 let listCont = document.getElementById("listContainer");
 let blockedWords = [];
+
 chrome.storage.sync.get(['bWords'], words => {
     listCont = document.getElementById("listContainer");
     blockedWords = words.bWords;
