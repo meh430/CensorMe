@@ -8,6 +8,38 @@
             background-color: black;
         }
 
+        input[type="search"]::-webkit-input-placeholder {
+            color: wheat;
+        }
+
+        input[type="search"]:-moz-placeholder {
+            color: wheat;
+        }
+
+        input[type="search"]::-moz-placeholder {
+            color: wheat;
+        }
+
+        input[type="search"]:-ms-input-placeholder {
+            color: wheat;
+        }
+
+        #wordInput {
+            color: black;
+            border: none;
+            box-shadow: inset;
+            opacity: 0.48;
+            border-top-style: hidden;
+            border-right-style: hidden;
+            border-left-style: hidden;
+            border-bottom-style: hidden;
+            background-color: white;
+            border-radius: 10px;
+            font-size: 14px;
+            padding: 8px;
+            margin-bottom: 2px;
+        }
+
         #wrapper {
             background-color: black;
         }
@@ -20,6 +52,7 @@
         }
 
         .textElems {
+            text-align: center;
             font-family: 'Open Sans', sans-serif;
             color: white;
         }
@@ -38,6 +71,24 @@
             font-family: 'Open Sans', sans-serif;
         }
 
+        .tab {
+            cursor: pointer;
+            margin: 3px;
+            border: 1px solid white;
+            border-radius: 5px;
+            padding: 3px;
+            color: white;
+            font-family: 'Open Sans', sans-serif;
+            font-size: x-small;
+            display: inline-block;
+            color: white;
+            text-align: center;
+        }
+
+        .tabGroup {
+            text-align: center;
+        }
+
         hr {
             color: white;
             background-color: white;
@@ -45,7 +96,7 @@
             height: 1px;
             width: 70%;
         }
-        
+
         ::-webkit-scrollbar {
             width: 2px;
             height: 2px;
@@ -96,8 +147,17 @@
         <h5 class="textElems" id="currentSite">Current Site: </h5>
 
         <input type="text" placeholder="Add Word..." id="wordInput">
-        <hr>
+        <hr id="listDivider">
         </hr>
+        <div class="tabGroup">
+            <div id="wordsTab" class="tab">
+                Blocked Words
+            </div>
+
+            <div id="urlsTab" class="tab">
+                Blocked Urls
+            </div>
+        </div>
         <ul id="listContainer">
             <li>first</li>
             <li>second</li>

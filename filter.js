@@ -1,15 +1,15 @@
 const elementNames = ["P", "H1", "H2", "H3", "H4", "H5", "H6"]; //, "UL", "LI", "OL"]
-let blockedList = [];
+let blockedWords = [];
 
 const applyFilter = () => {
     try {
         chrome.storage.sync.get(["bWords"], (words) => {
-            blockedList = words.bWords;
-            console.log(blockedList);
+            blockedWords = words.bWords;
+            console.log(blockedWords);
             let items = document.getElementsByTagName("*");
             for (let i = items.length; i--; ) {
                 if (items[i].nodeName && elementNames.includes(items[i].nodeName)) {
-                    blockedList.forEach((word) => {
+                    blockedWords.forEach((word) => {
                         items[i].textContent = replaceOccurrences(items[i].textContent, word);
                     });
                 } else {
@@ -27,18 +27,9 @@ const startTimer = () => {
     setInterval(applyFilter, 10000);
 };
 
-const url = window.location.origin;
-console.log(url);
-if (!url.toString().toLowerCase().includes("youtube")) {
-    window.addEventListener("load", applyFilter, false);
-    window.addEventListener("load", startTimer, false);
-} else {
-    console.log("BLOCKED");
-}
-
 chrome.storage.onChanged.addListener(() => {
     chrome.storage.sync.get(["bWords"], (words) => {
-        blockedList = words.bWords;
+        blockedWords = words.bWords;
     });
 });
 
@@ -46,3 +37,22 @@ function replaceOccurrences(text, oldStr) {
     const tempReg = new RegExp(oldStr, "gi");
     return text.replace(tempReg, "BLOCKED");
 }
+
+chrome.storage.sync.get(["bUrls"], (urls) => {
+    const currUrl = window.location.origin;
+    console.log(currUrl);
+    let isBlockedUrl = false;
+    for (let i = 0; i < urls.bUrls; i++) {
+        if (currUrl.toString().toLowerCase().includes(urls.bUrls[i])) {
+            isBlockedUrl = true;
+            break;
+        }
+    }
+
+    if (isBlockedUrl) {
+        console.log("whitelisted url");
+    } else {
+        window.addEventListener("load", applyFilter, false);
+        window.addEventListener("load", startTimer, false);
+    }
+});
