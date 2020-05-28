@@ -3,16 +3,24 @@ let currentSite = document.getElementById("currentSite");
 let listCont = document.getElementById("listContainer");
 let wordsTab = document.getElementById("wordsTab");
 let urlsTab = document.getElementById("urlsTab");
+let onTab = document.getElementById("onTab");
+let offTab = document.getElementById("offTab");
 let currentLocation = "";
 let viewingWords = true;
 let blockedWords = [];
 let blockedUrls = [];
+let filterOff = false;
 
 chrome.storage.sync.get(["bWords"], (words) => {
     listCont = document.getElementById("listContainer");
     blockedWords = words.bWords;
-    changeTab();
+    changeTab(true);
 });
+
+chrome.storage.sync.get(["globalOff"], (filtOff) => {
+    filterOff = filtOff.globalOff;
+    changeTab(false);
+})
 
 wordInput.addEventListener("keypress", (event) => {
     if (event.keyCode === 13 || event.which === 13) {
@@ -24,7 +32,7 @@ wordInput.addEventListener("keypress", (event) => {
             showError(enteredWord + " is already blocked!");
         } else {
             blockedWords.push(enteredWord);
-            chrome.storage.sync.set({ bWords: blockedWords, bUrls: blockedUrls }, () => {
+            chrome.storage.sync.set({ bWords: blockedWords, bUrls: blockedUrls, globalOff: filterOff }, () => {
                 console.log("Added to storage: " + blockedWords);
                 if (viewingWords) {
                     updateUL(blockedWords);
@@ -46,7 +54,7 @@ currentSite.addEventListener("click", (event) => {
         blockedUrls.push(currentLocation);
     }
 
-    chrome.storage.sync.set({ bWords: blockedWords, bUrls: blockedUrls }, () => {
+    chrome.storage.sync.set({ bWords: blockedWords, bUrls: blockedUrls, globalOff: filterOff }, () => {
         if (!viewingWords) {
             updateUL(blockedUrls);
         }
@@ -55,13 +63,28 @@ currentSite.addEventListener("click", (event) => {
 
 wordsTab.addEventListener("click", (event) => {
     viewingWords = true;
-    changeTab();
+    changeTab(true);
 });
 
 urlsTab.addEventListener("click", (event) => {
     viewingWords = false;
-    changeTab();
+    changeTab(true);
 });
+
+onTab.addEventListener("click", (event) => {
+    changeGlobalOff(false);
+});
+
+offTab.addEventListener("click", (event) => {
+    changeGlobalOff(true);
+});
+
+function changeGlobalOff(filter) {
+    filterOff = filter;
+    chrome.storage.sync.set({ bWords: blockedWords, bUrls: blockedUrls, globalOff: filterOff }, () => {
+        changeTab(false);
+    });
+}
 
 chrome.tabs.query(
     {
@@ -112,18 +135,25 @@ function showError(errorText) {
     }, 3000);
 }
 
-function changeTab() {
-    if (viewingWords) {
-        wordsTab.style.backgroundColor = "white";
-        wordsTab.style.color = "black";
-        urlsTab.style.backgroundColor = "black";
-        urlsTab.style.color = "white";
-        updateUL(blockedWords);
+function changeTab(listTab) {
+    const tab1 = listTab ? wordsTab : offTab;
+    const tab2 = listTab ? urlsTab : onTab;
+    const condition = listTab ? viewingWords : filterOff;
+    if (condition) {
+        tab1.style.backgroundColor = "white";
+        tab1.style.color = "black";
+        tab2.style.backgroundColor = "black";
+        tab2.style.color = "white";
+        if (listTab) {
+            updateUL(blockedWords);
+        }
     } else {
-        wordsTab.style.backgroundColor = "black";
-        wordsTab.style.color = "white";
-        urlsTab.style.backgroundColor = "white";
-        urlsTab.style.color = "black";
-        updateUL(blockedUrls);
+        tab1.style.backgroundColor = "black";
+        tab1.style.color = "white";
+        tab2.style.backgroundColor = "white";
+        tab2.style.color = "black";
+        if (listTab) {
+            updateUL(blockedUrls);
+        }
     }
 }
