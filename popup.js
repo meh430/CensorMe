@@ -7,9 +7,11 @@ let onTab = document.getElementById("onTab");
 let offTab = document.getElementById("offTab");
 let currentLocation = "";
 let viewingWords = true;
+let filterOff = false;
 let blockedWords = [];
 let blockedUrls = [];
-let filterOff = false;
+
+const urlReg = /:\/\/(.[^/]+)/;
 
 chrome.storage.sync.get(["bWords"], (words) => {
     listCont = document.getElementById("listContainer");
@@ -92,8 +94,8 @@ chrome.tabs.query(
         lastFocusedWindow: true,
     },
     (tabs) => {
-        currentSite.innerHTML = "Current Site: " + tabs[0].url;
-        currentLocation = tabs[0].url;
+        currentLocation = tabs[0].url.match(urlReg)[1];
+        currentSite.innerHTML = "Current Site: " + currentLocation;
         chrome.storage.sync.get(["bUrls"], (urls) => {
             blockedUrls = urls.bUrls;
             if (blockedUrls.includes(currentLocation)) {
@@ -113,6 +115,32 @@ function updateUL(list) {
         item = document.createElement("li");
         item.className = "itemStyle";
         item.appendChild(document.createTextNode(word));
+        item.addEventListener("mouseover", (event) => {
+            const clickedElement = event.target || event.srcElement;
+            clickedElement.style.color = "red";
+        });
+        item.addEventListener("mouseout", (event) => {
+            const clickedElement = event.target || event.srcElement;
+            clickedElement.style.color = "white";
+        });
+        item.addEventListener("click", (event) => {
+            const clickedElement = event.target || event.srcElement;
+            const clickedText = clickedElement.textContent;
+            let clickedIndex = -1;
+            if (viewingWords) {
+                clickedIndex = blockedWords.indexOf(clickedText);
+                if (clickedIndex > -1) {
+                    blockedWords.splice(clickedIndex, 1);
+                }
+                updateUL(blockedWords);
+            } else {
+                clickedIndex = blockedUrls.indexOf(clickedText);
+                if (clickedIndex > -1) {
+                    blockedUrls.splice(clickedIndex, 1);
+                }
+                updateUL(blockedUrls);
+            }
+        });
         listCont.appendChild(item);
     });
 }

@@ -15,12 +15,3 @@ chrome.runtime.onInstalled.addListener(() => {
         console.log("Set up storage");
     })
 });
-
-
-//launch filter from here?
-chrome.tabs.onActivated.addListener(activeInfo => {
-    chrome.tabs.get(activeInfo.tabId, (tab) => {
-        console.log("url: " + tab.url);
-        let currUrl = tab.url;
-    });
-});

@@ -1,14 +1,16 @@
 const elementNames = ["P", "H1", "H2", "H3", "H4", "H5", "H6"]; //, "UL", "LI", "OL"]
 let blockedWords = [];
 let filterOff = false;
+
 const applyFilter = () => {
     if (filterOff) {
         return;
     }
+
     try {
         chrome.storage.sync.get(["bWords"], (words) => {
             blockedWords = words.bWords;
-            console.log(blockedWords);
+            console.log("blocked list: " + blockedWords);
             let items = document.getElementsByTagName("*");
             for (let i = items.length; i--; ) {
                 if (items[i].nodeName && elementNames.includes(items[i].nodeName)) {
@@ -36,8 +38,9 @@ chrome.storage.onChanged.addListener(() => {
     });
 
     chrome.storage.sync.get(["globalOff"], (filtOff) => {
+        console.log(filtOff.globalOff);
         filterOff = filtOff.globalOff;
-        if (filterOff) {
+        if (!filterOff) {
             startScript();
         }
     });
@@ -47,13 +50,6 @@ function replaceOccurrences(text, oldStr) {
     const tempReg = new RegExp(oldStr, "gi");
     return text.replace(tempReg, "BLOCKED");
 }
-
-chrome.storage.sync.get(["globalOff"], (filtOff) => {
-    filterOff = filtOff.globalOff;
-    if (!filterOff) {
-        startScript();
-    }
-});
 
 function startScript() {
     chrome.storage.sync.get(["bUrls"], (urls) => {
@@ -75,3 +71,11 @@ function startScript() {
             }
         });
 }
+
+chrome.storage.sync.get(["globalOff"], (filtOff) => {
+    filterOff = filtOff.globalOff;
+    console.log(filtOff.globalOff);
+    if (!filterOff) {
+        startScript();
+    }
+});
