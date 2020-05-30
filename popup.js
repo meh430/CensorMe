@@ -61,6 +61,10 @@ currentSite.addEventListener("click", (event) => {
             updateUL(blockedUrls);
         }
     });
+
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        chrome.tabs.update(tabs[0].id, {url: tabs[0].url});
+    });
 });
 
 wordsTab.addEventListener("click", (event) => {
@@ -140,6 +144,10 @@ function updateUL(list) {
                 }
                 updateUL(blockedUrls);
             }
+
+            chrome.storage.sync.set({ bWords: blockedWords, bUrls: blockedUrls, globalOff: filterOff }, () => {
+                console.log("Updated deletion");
+            });
         });
         listCont.appendChild(item);
     });
