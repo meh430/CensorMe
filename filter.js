@@ -42,6 +42,10 @@ const startTimer = () => {
 chrome.storage.onChanged.addListener(() => {
     chrome.storage.sync.get(["bWords"], (words) => {
         blockedWords = words.bWords;
+        chrome.storage.sync.get(["bUrls"], (urls) => {
+            blockedUrls = urls.bUrls;
+            applyFilter();
+        });
     });
 
     chrome.storage.sync.get(["globalOff"], (filtOff) => {
@@ -79,12 +83,13 @@ chrome.storage.sync.get(["globalOff"], (filtOff) => {
 });
 
 function isBlockedUrl() {
+    console.log(blockedUrls)
     const currUrl = window.location.origin;
     console.log(currUrl);
     let blocked = false;
-    for (let i = 0; i < blockedUrls; i++) {
+    for (let i = 0; i < blockedUrls.length; i++) {
         if (currUrl.toString().toLowerCase().includes(blockedUrls[i])) {
-            console.log("FOUND BLOCKED")
+            console.log("FOUND BLOCKED");
             blocked = true;
             break;
         }
