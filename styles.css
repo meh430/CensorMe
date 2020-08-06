@@ -69,9 +69,9 @@ input[type="search"]:-ms-input-placeholder {
 }
 
 .itemStyle {
+    background-color: #2d2e31;
     cursor: pointer;
     margin: 0;
-    border: 1px solid white;
     border-radius: 10px;
     margin-top: 3px;
     padding: 3px;
