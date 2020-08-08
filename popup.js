@@ -83,6 +83,10 @@ onTab.addEventListener("click", (event) => {
 
 offTab.addEventListener("click", (event) => {
     changeGlobalOff(true);
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        chrome.tabs.update(tabs[0].id, { url: tabs[0].url });
+    });
+    
 });
 
 function changeGlobalOff(filter) {

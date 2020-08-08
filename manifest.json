@@ -7,7 +7,7 @@
         "https://*/*", "storage", "contextMenus"],
     "background": {
         "scripts": ["startup.js"],
-        "persistent": false
+        "persistent": true
     },
     "content_scripts": [{
         "matches": ["<all_urls>"],
