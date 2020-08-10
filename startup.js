@@ -14,25 +14,23 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.storage.sync.set({ bWords: [], bUrls: [], globalOff: false }, () => {
         console.log("Set up storage");
     });
-
-    let conMenu = {
-        id: "wId",
-        title: "Block this word",
-        visible: true,
-        contexts: ["selection"],
-    };
-
-    chrome.contextMenus.create(conMenu);
-
 });
+
+let conMenu = {
+    id: "wId",
+    title: "Block this word",
+    visible: true,
+    contexts: ["selection"],
+};
+
+chrome.contextMenus.create(conMenu);
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     if ("selectionText" in info && !info["selectionText"].includes(" ")) {
-
         chrome.storage.sync.get(["bWords"], (words) => {
             if (!words.bWords.includes(info["selectionText"])) {
                 words.bWords.push(info["selectionText"]);
-                chrome.storage.sync.set({bWords: words.bWords}, () => console.log("Updated links"));
+                chrome.storage.sync.set({ bWords: words.bWords }, () => console.log("Updated links"));
             }
         });
     }
