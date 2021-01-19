@@ -15,4 +15,4 @@ Chrome extension that should censor keywords
 <img src="https://cdn.discordapp.com/attachments/717487791491121162/741658762636689438/unknown.png">
 
 ## How To Install
-- Coming soon...
+- Get it [here](https://chrome.google.com/webstore/detail/censor-me/ggocchioncipejignjfojdccjmgdjohp)
